@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> Sumo bots keyboard test </title>
+        <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+		
+		<script type="text/javascript">
+			const client = mqtt.connect('wss://mqtt-test:dEQCNyQiT1bCNj5W@mqtt-test.cloud.shiftr.io', {
+        clientId: 'javascript'
+      });
+
+      client.on('connect', function() {
+        console.log('connected!');
+        client.subscribe('hello');
+      });
+
+      client.on('message', function(topic, message) {
+        console.log(topic + ': ' + message.toString());
+      });
+
+		
+		
+            var sendCommand = 1;
+
+            //Key Pressed
+           document.addEventListener('keydown', function (e)  {
+
+			
+			if ((e.key=='w' || e.key=='W') && sendCommand)
+			{
+			swag.textContent += e.code +" pressed, Moving forward!" ;
+			sendData("forward");
+			sendCommand = 0;
+			 }
+			else if ((e.key=='a' || e.key=='A') && sendCommand){
+
+			 swag.textContent += e.code+ " pressed, Moving LEFT! ";
+			 sendData("left");
+			 sendCommand = 0;
+				  }
+			else if ((e.key=='s' || e.key=='S') && sendCommand){
+
+			 swag.textContent += e.code+ " pressed, Moving BACK! ";
+			 sendData("backward");
+			 sendCommand = 0;
+			  }
+
+			else if ((e.key=='d' || e.key=='D') && sendCommand){
+
+			 swag.textContent += e.code+ " pressed, Moving RIGHT!";
+			  sendData("right");
+			  sendCommand = 0;
+                }
+            });
+
+            //Key Released
+            document.addEventListener("keyup", function (e) {
+                if (e.key == "w" || e.key=="W"|| e.key =="a" || e.key=="s" || e.key=="d"){
+			
+					sendData("stop");
+					sendCommand =1;
+				}
+            });
+
+            function sendData(motorData) {  //Send data for ESP32 to resond to
+                
+				client.publish('hello', motorData);
+            }
+        </script>
+    
+	</head>
+	<body>
+		<p> This will output the current key: </p>
+		<p id="swag"></p>
+	</body>
+</html>

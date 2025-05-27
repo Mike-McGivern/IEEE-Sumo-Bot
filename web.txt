@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> Sumo bots keyboard test </title>
+        <script type="text/javascript">
+            var sendCommand = 1;
+		
+			
+		
+            //Key Pressed
+           document.addEventListener('keydown', function (e)  {
+
+			
+			if ((e.key=='w' || e.key=='W') && sendCommand)
+			{
+			swag.innerHTML += e.code +" pressed, Moving forward!" ;
+			swag.innerHTML += '<br />';
+			sendData("forward");
+			sendCommand = 0;
+			 }
+			else if ((e.key=='a' || e.key=='A') && sendCommand){
+
+			 swag.innerHTML += e.code+ " pressed, Moving LEFT! ";
+			 swag.innerHTML += '<br />';
+			 sendData("left");
+			 sendCommand = 0;
+				  }
+			else if ((e.key=='s' || e.key=='S') && sendCommand){
+
+			 swag.innerHTML += e.code+ " pressed, Moving BACK!";
+			 swag.innerHTML += '<br />';
+			 sendData("backward");
+			 sendCommand = 0;
+			  }
+
+			else if ((e.key=='d' || e.key=='D') && sendCommand){
+
+			 swag.innerHTML += e.code+ " pressed, Moving RIGHT!";
+			 swag.innerHTML += '<br />';
+			  sendData("right");
+			  sendCommand = 0;
+                }
+            });
+
+            //Key Released
+            document.addEventListener("keyup", function (e) {
+                if (e.key == "w" || e.key=="W"|| e.key =="a" || e.key=="s" || e.key=="d"){
+			
+					sendData("stop");
+					sendCommand =1;
+				}
+            });
+
+            function sendData(motorData) {  //Send data for ESP32 to resond to
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                    }
+                };
+                xhttp.open("GET", "http://192.168.1.110/"+motorData, true);
+                xhttp.send();
+            }
+        </script>
+    
+	</head>
+	<body>
+		<p> This will output the current key: <br> </p>
+		<p id="swag"></p>
+	</body>
+</html>
